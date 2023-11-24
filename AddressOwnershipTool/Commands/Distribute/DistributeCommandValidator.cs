@@ -6,7 +6,7 @@ public class DistributeCommandValidator : AbstractValidator<DistributeCommand>
 {
     public DistributeCommandValidator()
     {            
-        RuleFor(x => x.WalletName).NotEmpty();
-        RuleFor(x => x.WalletPassword).NotEmpty();
+        RuleFor(x => x.WalletName).NotEmpty().WithName("--walletname");
+        RuleFor(x => x.WalletPassword).NotEmpty().WithName("--walletpassword");
     }
 }

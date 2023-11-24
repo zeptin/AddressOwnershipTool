@@ -30,6 +30,7 @@ namespace AddressOwnershipTool.Commands
 
             if (errorsDictionary.Any())
             {
+                Console.WriteLine("Invalid or missing parameters. Please use '--help' for more information on what parameters are needed.");
                 throw new ValidationException(errorsDictionary);
             }
 
