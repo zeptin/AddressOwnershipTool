@@ -5,7 +5,7 @@ namespace AddressOwnershipTool.Commands.Claim;
 [Verb("claim", HelpText = "Creates file for token claim request")]
 public class ClaimInstruction : BaseInstruction
 {
-    [Option('f', "destination", Required = false, HelpText = "Please provide destination file path.")]
+    [Option('f', "destination", Required = false, HelpText = "Please provide destination StratisEVM address.")]
     public string Destination { get; set; }
 
     [Option('n', "walletname", Required = false, HelpText = "Please provide target wallet name.")]
@@ -14,7 +14,7 @@ public class ClaimInstruction : BaseInstruction
     [Option('p', "walletpassword", Required = false, HelpText = "Please provide target wallet password.")]
     public string WalletPassword { get; set; }
 
-    [Option('a', "walletaccount", Required = false, HelpText = "Please provide target wallet account (Default 'account 0').", Default = "account 0")]
+    [Option('a', "walletaccount", Required = false, HelpText = "Please provide target wallet account.", Default = "account 0")]
     public string WalletAccount { get; set; }
 
     [Option('p', "privkeyfile", Required = false, HelpText = "Please provide private key file, if used all other settings not required.")]

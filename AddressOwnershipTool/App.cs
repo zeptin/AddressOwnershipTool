@@ -20,7 +20,7 @@ namespace AddressOwnershipTool
         public async Task Run(string[] args)
         {
             args = new string[] { "claim", "--walletname=testwallet", "--api", "--destination=0x0D36390660dA0950c9d2BcA0e8868F3c4Fdb0eBA", "--walletpassword=Phoenix88" };
-
+            args = new string[] { "claim", "--help" };
             ICommand<Result> command = null;
 
             Parser

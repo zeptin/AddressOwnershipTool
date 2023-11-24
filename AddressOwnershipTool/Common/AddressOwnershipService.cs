@@ -204,24 +204,6 @@ public class AddressOwnershipService : IAddressOwnershipService
         Console.WriteLine($"There are {Money.Satoshis(this.ownershipTransactions.Sum(s => s.SenderAmount)).ToUnit(MoneyUnit.BTC)} STRAT with ownership proved.");
     }
 
-    private PubKey RecoverLedgerPubKey(string address, string signature)
-    {
-        var specialBytes = 0x18;
-        var prefixBytes = Encoding.UTF8.GetBytes("Stratis Signed Message:\n");
-        var lengthBytes = BitConverter.GetBytes((char)address.Length).Take(1).ToArray();
-        var addressBytes = Encoding.UTF8.GetBytes(address);
-
-        byte[] dataBytes = new byte[1 + prefixBytes.Length + lengthBytes.Length + addressBytes.Length];
-        dataBytes[0] = (byte)specialBytes;
-        Buffer.BlockCopy(prefixBytes, 0, dataBytes, 1, prefixBytes.Length);
-        Buffer.BlockCopy(lengthBytes, 0, dataBytes, prefixBytes.Length + 1, lengthBytes.Length);
-        Buffer.BlockCopy(addressBytes, 0, dataBytes, prefixBytes.Length + lengthBytes.Length + 1, addressBytes.Length);
-
-        uint256 messageHash = NBitcoin.Crypto.Hashes.Hash256(dataBytes);
-        var recovered = PubKey.RecoverCompact(messageHash, Encoders.Base64.DecodeData(signature));
-        return recovered;
-    }
-
     public void StratisXExport(string privKeyFile, string destinationAddress)
     {
         var lines = File.ReadLines(privKeyFile);
