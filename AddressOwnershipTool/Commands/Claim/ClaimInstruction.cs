@@ -17,25 +17,13 @@ public class ClaimInstruction : BaseInstruction
     [Option('a', "walletaccount", Required = false, HelpText = "Please provide target wallet account.", Default = "account 0")]
     public string WalletAccount { get; set; }
 
-    [Option('p', "privkeyfile", Required = false, HelpText = "Please provide private key file, if used all other settings not required.")]
-    public string PrivateKeyFile { get; set; }
-
-    [Option('i', "api", Required = false, HelpText = "Specify if claim should be done via wallet API.")]
-    public bool Api { get; set; }
-
-    [Option('d', "deep", Required = false, HelpText = "Specify Whether or not to export SFN addresses with no transactions.")]
-    public bool Deep { get; set; }
-
     public ClaimCommand ToCommand()
     {
         return new ClaimCommand
         {
-            Api = Api,
             WalletAccount = WalletAccount,
-            PrivateKeyFile = PrivateKeyFile,
             WalletPassword = WalletPassword,
             WalletName = WalletName,
-            Deep = Deep,
             Testnet = Testnet,
             Destination = Destination
         };
