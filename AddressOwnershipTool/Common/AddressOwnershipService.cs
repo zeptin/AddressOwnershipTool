@@ -13,6 +13,7 @@ using Stratis.Features.SQLiteWalletRepository;
 using System.Globalization;
 using System.Reflection;
 using System.Text;
+using Stratis.Sidechains.Networks;
 
 namespace AddressOwnershipTool.Common;
 
@@ -31,11 +32,15 @@ public class AddressOwnershipService : IAddressOwnershipService
     private List<OwnershipTransaction> ownershipTransactions;
     private int straxApiPort;
 
-    public AddressOwnershipService(INodeApiClientFactory nodeApiClientFactory, bool testnet, bool loadFiles = true)
+    public AddressOwnershipService(INodeApiClientFactory nodeApiClientFactory, bool testnet, bool useCirrus = false, bool loadFiles = true)
     {
-        this.network = testnet ? new StraxTest() : new StraxMain();
+        this.network = testnet 
+            ? (useCirrus ? new CirrusTest() : new StraxTest())
+            : (useCirrus ? new CirrusMain() : new StraxMain());
 
-        this.straxApiPort = testnet ? 27103 : 17103;
+        this.straxApiPort = testnet
+            ? (useCirrus ? 38223 : 27103)
+            : (useCirrus ? 37223 : 17103);
 
         this.ownershipFilePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
@@ -102,8 +107,8 @@ public class AddressOwnershipService : IAddressOwnershipService
 
     public void Validate(string sigFileFolder)
     {
-        var straxApiClient = nodeApiClientFactory.CreateNodeApiClient($"http://localhost:{this.straxApiPort}/api");
-        var stratisApiClient = nodeApiClientFactory.CreateNodeApiClient($"http://localhost:{this.network.DefaultAPIPort}/api");
+        var straxApiClient = nodeApiClientFactory.CreateNodeApiClient($"http://localhost:{this.network.DefaultAPIPort}/api");
+        var stratisEvmApiClient = nodeApiClientFactory.CreateNodeApiClient($"http://localhost:{this.network.DefaultAPIPort}/api");
 
         foreach (string file in Directory.GetFiles(sigFileFolder))
         {
@@ -150,16 +155,16 @@ public class AddressOwnershipService : IAddressOwnershipService
                         Console.WriteLine($"Invalid signature for address '{address}'!");
                     }
 
-                    if (!straxApiClient.ValidateAddress(destination))
+                    if (!destination.IsValidAddress() || !stratisEvmApiClient.ValidateAddress(destination))
                     {
-                        Console.WriteLine($"The provided Strax address was invalid: {destination}");
+                        Console.WriteLine($"The provided StratisEVM address was invalid: {destination}");
 
                         continue;
                     }
 
                     Console.WriteLine($"Validated signature for address '{address}'");
 
-                    decimal balance = stratisApiClient.GetAddressBalance(address);
+                    decimal balance = straxApiClient.GetAddressBalance(address);
 
                     if (balance == 0)
                     {
@@ -241,9 +246,11 @@ public class AddressOwnershipService : IAddressOwnershipService
         }
     }
 
-    public void SbfnExport(string walletName, string walletPassword, string destinationAddress, bool deepExport = false)
+    public void SbfnExport(string walletName, string walletPassword, string destinationAddress, bool deepExport = false, string dataFolder = null)
     {
-        var nodeSettings = new NodeSettings(this.network);
+        var nodeSettings = string.IsNullOrEmpty(dataFolder)
+            ? new NodeSettings(this.network)
+            : new NodeSettings(this.network, args: new string[] { $"datadirroot={dataFolder}" });
 
         // First check if sqlite wallet is being used.
         var walletRepository = new SQLiteWalletRepository(nodeSettings.LoggerFactory, nodeSettings.DataFolder, nodeSettings.Network, new DateTimeProvider(), new ScriptAddressReader());

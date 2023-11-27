@@ -12,6 +12,14 @@ public class ClaimCommandValidator : AbstractValidator<ClaimCommand>
             RuleFor(x => x.WalletPassword).NotEmpty().WithName("--walletpassword");
         });
 
+        When(x => !string.IsNullOrEmpty(x.DataFolder), () => {
+            RuleFor(x => x.DataFolder)
+            .NotEmpty()
+            .Must(x => Path.IsPathFullyQualified(x))
+            .WithMessage("Please specify a valid data folder path")
+            .WithName("--datafolder");
+        });
+
         When(x => !string.IsNullOrEmpty(x.PrivateKeyFile), () => {
             RuleFor(x => x.PrivateKeyFile)
                 .Must(x => Path.IsPathFullyQualified(x))

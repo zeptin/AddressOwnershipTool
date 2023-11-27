@@ -16,7 +16,7 @@ public class DistributeCommandHandler : ICommandHandler<DistributeCommand, Resul
         // We don't need wallet credentials to simulate the send.
         Console.WriteLine("Doing a trial run of the distribution to obtain the overall amount to be sent...");
 
-        var addressOwnershipService = _addressOwnershipServiceFactory.CreateAddressOwnershipService(request.Testnet);
+        var addressOwnershipService = _addressOwnershipServiceFactory.CreateAddressOwnershipService(request.Testnet, request.UseCirrus);
         addressOwnershipService.BuildAndSendDistributionTransactions(string.Empty, string.Empty, string.Empty, false);
 
         Console.WriteLine("Proceed with sending funds (y/n)?");

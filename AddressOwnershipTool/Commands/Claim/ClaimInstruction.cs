@@ -5,17 +5,23 @@ namespace AddressOwnershipTool.Commands.Claim;
 [Verb("claim", HelpText = "Creates file for token claim request")]
 public class ClaimInstruction : BaseInstruction
 {
-    [Option('f', "destination", Required = false, HelpText = "Please provide destination StratisEVM address.")]
+    [Option('d', "destination", Required = false, HelpText = "[Required] Please provide destination StratisEVM address.")]
     public string Destination { get; set; }
 
-    [Option('n', "walletname", Required = false, HelpText = "Please provide target wallet name.")]
+    [Option('n', "walletname", Required = false, HelpText = "[Required] Please provide target wallet name.")]
     public string WalletName { get; set; }
 
-    [Option('p', "walletpassword", Required = false, HelpText = "Please provide target wallet password.")]
+    [Option('p', "walletpassword", Required = false, HelpText = "[Required] Please provide target wallet password.")]
     public string WalletPassword { get; set; }
 
-    [Option('a', "walletaccount", Required = false, HelpText = "Please provide target wallet account.", Default = "account 0")]
+    [Option('a', "walletaccount", Required = false, HelpText = "[Required] Please provide target wallet account", Default = "account 0")]
     public string WalletAccount { get; set; }
+
+    [Option('c', "cirrus", Required = false, HelpText = "[Optional] Specify if you want to use CIRRUS, default is STRAX.")]
+    public bool UseCirrus { get; set; }
+
+    [Option('r', "datafolder", Required = false, HelpText = "[Optional] Root folder for your node")]
+    public string DataFolder { get; set; }
 
     public ClaimCommand ToCommand()
     {
@@ -25,7 +31,9 @@ public class ClaimInstruction : BaseInstruction
             WalletPassword = WalletPassword,
             WalletName = WalletName,
             Testnet = Testnet,
-            Destination = Destination
+            UseCirrus = UseCirrus,
+            Destination = Destination,
+            DataFolder = DataFolder
         };
     }
 }

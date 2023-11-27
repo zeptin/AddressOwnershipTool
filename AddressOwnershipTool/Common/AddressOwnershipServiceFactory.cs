@@ -9,8 +9,8 @@ public class AddressOwnershipServiceFactory : IAddressOwnershipServiceFactory
         _nodeApiClientFactory = nodeApiClientFactory;
     }
 
-    public IAddressOwnershipService CreateAddressOwnershipService(bool testnet, bool loadFiles = true)
+    public IAddressOwnershipService CreateAddressOwnershipService(bool testnet, bool useCirrus = false, bool loadFiles = true)
     {
-        return new AddressOwnershipService(_nodeApiClientFactory, testnet, loadFiles);
+        return new AddressOwnershipService(_nodeApiClientFactory, testnet, useCirrus, loadFiles);
     }
 }

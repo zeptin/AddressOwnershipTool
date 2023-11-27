@@ -11,4 +11,6 @@ public class DistributeCommand : ICommand<Result>
     public string WalletAccount { get; set; }
 
     public bool Testnet { get; set; }
+
+    public bool UseCirrus { get; set; }
 }

@@ -14,9 +14,13 @@ public class ClaimCommand : ICommand<Result>
 
     public string PrivateKeyFile { get; set; }
 
+    public bool UseCirrus { get; set; }
+
     public bool Api { get; set; }
 
     public bool Deep { get; set; }
 
     public bool Testnet { get; set; }
+
+    public string DataFolder { get; set; }
 }

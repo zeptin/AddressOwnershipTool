@@ -18,7 +18,7 @@ public class ValidateCommandHandler : ICommandHandler<ValidateCommand, Result>
             return Result.Fail($"Could not locate directory '{request.Signaturefolder}'!");
         }
 
-        var addressOwnershipService = _addressOwnershipServiceFactory.CreateAddressOwnershipService(request.Testnet);
+        var addressOwnershipService = _addressOwnershipServiceFactory.CreateAddressOwnershipService(request.Testnet, request.UseCirrus);
 
         addressOwnershipService.Validate(request.Signaturefolder);
 

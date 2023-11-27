@@ -35,7 +35,7 @@ public class ClaimCommandHandler : ICommandHandler<ClaimCommand, Result>
 
             Console.WriteLine("Private key file provided, assuming stratisX address ownership is required");
 
-            var addressOwnershipService = _addressOwnershipServiceFactory.CreateAddressOwnershipService(request.Testnet, false);
+            var addressOwnershipService = _addressOwnershipServiceFactory.CreateAddressOwnershipService(request.Testnet, request.UseCirrus, false);
             addressOwnershipService.StratisXExport(request.PrivateKeyFile, request.Destination);
 
             Console.WriteLine("Finished");
@@ -65,15 +65,15 @@ public class ClaimCommandHandler : ICommandHandler<ClaimCommand, Result>
 
                     string signature = client.SignMessage(request.WalletName, request.WalletPassword, address);
 
-                    var addressOwnershipService = _addressOwnershipServiceFactory.CreateAddressOwnershipService(request.Testnet, false);
+                    var addressOwnershipService = _addressOwnershipServiceFactory.CreateAddressOwnershipService(request.Testnet, request.UseCirrus, false);
                     addressOwnershipService.OutputToFile(address, request.Destination, signature);
                 }
             }
         }
         else
         {
-            var addressOwnershipService = _addressOwnershipServiceFactory.CreateAddressOwnershipService(request.Testnet, false);
-            addressOwnershipService.SbfnExport(request.WalletName, request.WalletPassword, request.Destination, request.Deep);
+            var addressOwnershipService = _addressOwnershipServiceFactory.CreateAddressOwnershipService(request.Testnet, request.UseCirrus, false);
+            addressOwnershipService.SbfnExport(request.WalletName, request.WalletPassword, request.Destination, request.Deep, request.DataFolder);
         }
 
         return Result.Ok();
