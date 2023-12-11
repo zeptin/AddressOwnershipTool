@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddressOwnershipTool", "Add
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6C651B94-8857-4CA0-A68A-88AED313EC64}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddressOwnershipTool.Web", "AddressOwnershipTool.Web\AddressOwnershipTool.Web.csproj", "{295F11A7-B8A5-46BA-8564-32CC33075B2C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,6 +19,10 @@ Global
 		{7A160E6C-FCEC-41CA-9E4A-983EE51D7B88}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A160E6C-FCEC-41CA-9E4A-983EE51D7B88}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A160E6C-FCEC-41CA-9E4A-983EE51D7B88}.Release|Any CPU.Build.0 = Release|Any CPU
+		{295F11A7-B8A5-46BA-8564-32CC33075B2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{295F11A7-B8A5-46BA-8564-32CC33075B2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{295F11A7-B8A5-46BA-8564-32CC33075B2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{295F11A7-B8A5-46BA-8564-32CC33075B2C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
