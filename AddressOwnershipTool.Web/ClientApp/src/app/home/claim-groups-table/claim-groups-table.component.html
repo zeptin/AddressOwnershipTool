@@ -1,0 +1,36 @@
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>
+        <input type="checkbox" (change)="selectAll($event)" [checked]="isAllSelected()" />
+      </th>
+      <th>Destination</th>
+      <th>No of Claims</th>
+      <th>Amount to Transfer</th>
+      <th>Original Amount</th>
+      <th>No of Claims</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let claimGroup of paginatedClaimGroups">
+      <td>
+        <input
+          type="checkbox"
+          (change)="selectClaimGroup(claimGroup, $event)"
+          [checked]="isSelected(claimGroup)"
+        />
+      </td>
+      <td>{{ claimGroup.destination }}</td>
+      <td>{{ claimGroup.numberOfClaimedAddresses }}</td>
+      <td>{{ claimGroup.totalAmountToTransfer }}</td>
+      <td>{{ claimGroup.originalTotalBalance }}</td>
+      <td>{{ claimGroup.claims.length }}</td>
+    </tr>
+  </tbody>
+</table>
+<ngb-pagination
+  [(page)]="currentPage"
+  [pageSize]="pageSize"
+  [collectionSize]="claimGroups.length"
+  (pageChange)="updatePaginator()"
+></ngb-pagination>

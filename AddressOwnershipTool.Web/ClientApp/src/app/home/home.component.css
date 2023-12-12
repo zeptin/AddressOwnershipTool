@@ -1,0 +1,15 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+h5 {
+  margin-top: 0.5rem;
+}
+
+.options {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}

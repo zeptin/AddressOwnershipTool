@@ -14,6 +14,7 @@ using System.Globalization;
 using System.Reflection;
 using System.Text;
 using Stratis.Sidechains.Networks;
+using System;
 
 namespace AddressOwnershipTool.Common;
 
@@ -108,7 +109,6 @@ public class AddressOwnershipService : IAddressOwnershipService
     public void Validate(string sigFileFolder)
     {
         var straxApiClient = nodeApiClientFactory.CreateNodeApiClient($"http://localhost:{this.network.DefaultAPIPort}/api");
-        var stratisEvmApiClient = nodeApiClientFactory.CreateNodeApiClient($"http://localhost:{this.network.DefaultAPIPort}/api");
 
         foreach (string file in Directory.GetFiles(sigFileFolder))
         {
@@ -155,7 +155,7 @@ public class AddressOwnershipService : IAddressOwnershipService
                         Console.WriteLine($"Invalid signature for address '{address}'!");
                     }
 
-                    if (!destination.IsValidAddress() || !stratisEvmApiClient.ValidateAddress(destination))
+                    if (!destination.IsValidAddress())
                     {
                         Console.WriteLine($"The provided StratisEVM address was invalid: {destination}");
 
@@ -188,7 +188,7 @@ public class AddressOwnershipService : IAddressOwnershipService
                     {
                         SenderAmount = balance,
                         StraxAddress = destination,
-                        // We set this to the source address on the Stratis chain, to ensure only one record exists per unique address.
+                        // We set this to the source address on the Strax chain, to ensure only one record exists per unique address.
                         SignedAddress = address
                     });
                 }
@@ -206,7 +206,7 @@ public class AddressOwnershipService : IAddressOwnershipService
         }
 
         Console.WriteLine($"There are {this.ownershipTransactions.Count} ownership transactions so far to process.");
-        Console.WriteLine($"There are {Money.Satoshis(this.ownershipTransactions.Sum(s => s.SenderAmount)).ToUnit(MoneyUnit.BTC)} STRAT with ownership proved.");
+        Console.WriteLine($"There are {Money.Satoshis(this.ownershipTransactions.Sum(s => s.SenderAmount)).ToUnit(MoneyUnit.BTC)} STRAX with ownership proved.");
     }
 
     public void StratisXExport(string privKeyFile, string destinationAddress)
