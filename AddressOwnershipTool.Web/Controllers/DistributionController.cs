@@ -1,4 +1,5 @@
 ﻿using AddressOwnershipTool.Commands.Load;
+using AddressOwnershipTool.Commands.Update;
 using AddressOwnershipTool.Web.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -29,5 +30,21 @@ public class DistributionController : Controller
         }
 
         return Ok(new { result = response.Value });
+    }
+
+    [Authorize]
+    [HttpPost("update")]
+    public async Task<IActionResult> Update([FromBody] SwapRequest request)
+    {
+        var response = await _mediator.Send(new UpdateCommand
+        {
+            Path = request.Path,
+            Amount = request.Amount,
+            Destination = request.Destination,
+            TxHash = request.TxHash,
+            Type = request.Type
+        });
+
+        return Ok(new { Result = response.Success });
     }
 }

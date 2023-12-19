@@ -3,7 +3,8 @@ export interface ClaimGroup {
   numberOfClaimedAddresses: number;
   totalAmountToTransfer: number;
   originalTotalBalance: number;
-  claims: Claim[]
+  claims: Claim[];
+  type: string;
 }
 
 export interface ClaimGroupResponse {
@@ -15,4 +16,20 @@ export interface Claim {
   destination: string;
   balance: number;
   originNetwork: string;
+  type: string;
+}
+
+export interface SwappedTx {
+  destination: string;
+  amount: number;
+  txHash: string;
+  type: string;
+}
+
+export interface SwapRequest {
+  destination: string;
+  amount: number;
+  txHash: string;
+  path: string;
+  type: string;
 }

@@ -25,6 +25,11 @@
   </ng-template>
 </div>
 <div class="container mt-4" *ngIf="claimGroups.length > 0">
+  <div class="modal-backdrop show" *ngIf="busy"></div>
+  <div class="modal show d-flex justify-content-center align-items-center" *ngIf="busy">
+    <div class="spinner-border text-primary" role="status"></div>
+  </div>
+
   <div class="header">
     <h5>Grouped Claims</h5>
     <div class="options">
@@ -32,5 +37,5 @@
       <a class="btn btn-sm btn-secondary" (click)="reset()">&lt;&lt; Go back</a>
     </div>
   </div>
-  <app-claim-group-table [claimGroups]="claimGroups" (selected)="selectionUpdated($event)"></app-claim-group-table>
+  <app-claim-group-table [failed]="failed" [successful]="successful" [claimGroups]="claimGroups" (selected)="selectionUpdated($event)"></app-claim-group-table>
 </div>

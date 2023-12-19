@@ -19,7 +19,7 @@ export class EthService {
     }
   }
 
-  async sendTransaction(fromAddress: string, toAddress: string, amountEther: number): Promise<void> {
+  async sendTransaction(fromAddress: string, toAddress: string, amountEther: number): Promise<string> {
     const transactionParameters = {
       to: toAddress,
       from: fromAddress,
@@ -32,6 +32,7 @@ export class EthService {
           params: [transactionParameters],
       });
       console.log('Transaction Hash:', txHash);
+      return txHash;
     } catch (error) {
       console.error('Transaction failed:', error);
       throw new Error('Transaction failed');

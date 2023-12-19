@@ -7,4 +7,6 @@ public class OwnershipTransaction
     public decimal SenderAmount { get; set; }
 
     public string SignedAddress { get; set; }
+
+    public string Type { get; set; }
 }

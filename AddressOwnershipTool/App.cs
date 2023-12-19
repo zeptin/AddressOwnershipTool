@@ -1,6 +1,7 @@
 ﻿using AddressOwnershipTool.Commands;
 using AddressOwnershipTool.Commands.Claim;
 using AddressOwnershipTool.Commands.Distribute;
+using AddressOwnershipTool.Commands.Scan;
 using AddressOwnershipTool.Commands.Validate;
 using AddressOwnershipTool.Common;
 using CommandLine;
@@ -20,12 +21,13 @@ namespace AddressOwnershipTool
         public async Task Run(string[] args)
         {
             //args = new string[] { "claim", "--walletname=testwallet", "--destination=0x0D36390660dA0950c9d2BcA0e8868F3c4Fdb0eBA", "--walletpassword=Phoenix88" };
-            args = new string[] { "validate", "--sigfolder=C:\\Temp\\cirrus" };
+            //args = new string[] { "validate", "--sigfolder=C:\\Temp\\cirrus\\Validate" };
+            args = new string[] { "scan", "--start=2062730" };
             ICommand<Result> command = null;
 
             Parser
                 .Default
-                .ParseArguments<ClaimInstruction, DistributeInstruction, ValidateInstruction>(args)
+                .ParseArguments<ClaimInstruction, DistributeInstruction, ValidateInstruction, ScanInstruction>(args)
                 .MapResult(
                     (ClaimInstruction instruction) =>
                     {
@@ -38,6 +40,11 @@ namespace AddressOwnershipTool
                         return 0;
                     },
                     (ValidateInstruction instruction) =>
+                    {
+                        command = instruction.ToCommand();
+                        return 0;
+                    },
+                    (ScanInstruction instruction) =>
                     {
                         command = instruction.ToCommand();
                         return 0;

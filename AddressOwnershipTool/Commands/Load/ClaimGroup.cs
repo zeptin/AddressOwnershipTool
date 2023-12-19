@@ -4,9 +4,11 @@ public class ClaimGroup
 {
     public string Destination { get; set; }
 
+    public string Type { get; set; }
+
     public int NumberOfClaimedAddresses => this.Claims.Count();
 
-    public decimal TotalAmountToTransfer => this.OriginalTotalBalance * 0.01M;
+    public decimal TotalAmountToTransfer => this.OriginalTotalBalance * 0.0001M;
 
     public decimal OriginalTotalBalance => this.Claims.Sum(c => c.Balance);
 
@@ -20,4 +22,6 @@ public class Claim
     public decimal Balance { get; set; }
 
     public string OriginNetwork { get; set; }
+
+    public string Type { get; set; }
 }

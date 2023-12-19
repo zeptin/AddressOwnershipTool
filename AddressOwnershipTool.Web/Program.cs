@@ -44,7 +44,9 @@ builder.Services.AddSingleton<ITokenService>(new TokenService(secret));
 builder.Services.AddTransient<INodeApiClient>(provider => new NodeApiClient(ExplorerBaseUrl));
 builder.Services.AddTransient<INodeApiClientFactory, NodeApiClientFactory>();
 builder.Services.AddTransient<IAddressOwnershipServiceFactory, AddressOwnershipServiceFactory>();
+builder.Services.AddTransient<ISwapExtractionServiceFactory, SwapExtractionServiceFactory>();
 builder.Services.AddScoped<IBlockExplorerClient, BlockExplorerClient>();
+builder.Services.AddScoped<IEthRpcClientFactory, EthRpcClientFactory>();
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(App).Assembly));
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));

@@ -1,4 +1,5 @@
 ﻿using Stratis.Bitcoin.Controllers.Models;
+using Stratis.Bitcoin.Features.BlockStore.Models;
 using Stratis.Bitcoin.Features.Wallet.Models;
 
 namespace AddressOwnershipTool.Common;
@@ -16,6 +17,10 @@ public interface INodeApiClient
     List<string> GetAddresses(string walletName, string account);
 
     List<AddressBalanceChange> GetVerboseAddressBalance(string address);
+
+    TransactionModel GetTransaction(string txId);
+
+    Task<BlockTransactionDetailsModel> RetrieveBlockAtHeightAsync(int blockHeight);
 
     void SendTransaction(string hex);
 

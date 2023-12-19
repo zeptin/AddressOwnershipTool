@@ -3,6 +3,7 @@ using Flurl.Http;
 using NBitcoin;
 using Newtonsoft.Json;
 using Stratis.Bitcoin.Controllers.Models;
+using Stratis.Bitcoin.Features.BlockStore.Models;
 using Stratis.Bitcoin.Features.Wallet.Models;
 using System.Text;
 
@@ -47,6 +48,24 @@ public class NodeApiClient : IDisposable, INodeApiClient
         return addressBalance.Balance.ToDecimal(MoneyUnit.Satoshi);
     }
 
+    public async Task<BlockTransactionDetailsModel> RetrieveBlockAtHeightAsync(int blockHeight)
+    {
+        var blockHash = await $"{this.baseUrl}"
+            .AppendPathSegment("consensus/getblockhash")
+            .SetQueryParams(new { height = blockHeight })
+            .GetJsonAsync<string>();
+
+        if (blockHash == null)
+            return null;
+
+        BlockTransactionDetailsModel blockModel = await $"{this.baseUrl}"
+            .AppendPathSegment("blockstore/block")
+            .SetQueryParams(new SearchByHashRequest() { Hash = blockHash, ShowTransactionDetails = true, OutputJson = true })
+            .GetJsonAsync<BlockTransactionDetailsModel>();
+
+        return blockModel;
+    }
+
     public List<AddressBalanceChange> GetVerboseAddressBalance(string address)
     {
         VerboseAddressBalancesResult result = $"{this.baseUrl}"
@@ -60,6 +79,16 @@ public class NodeApiClient : IDisposable, INodeApiClient
             return new List<AddressBalanceChange>();
 
         return addressBalance.BalanceChanges;
+    }
+
+    public TransactionModel GetTransaction(string txId)
+    {
+        TransactionModel result = $"{this.baseUrl}"
+            .AppendPathSegment($"transactions/")
+            .AppendPathSegment($"{txId}")
+            .GetJsonAsync<TransactionModel>().GetAwaiter().GetResult();
+
+        return result;
     }
 
     public WalletBuildTransactionModel BuildTransaction(string walletName, string walletPassword, string accountName, List<RecipientModel> recipients)

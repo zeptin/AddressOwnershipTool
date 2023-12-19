@@ -7,7 +7,13 @@ import { ClaimGroup } from 'src/app/models/claim-group';
 })
 export class ClaimGroupsTableComponent implements OnInit {
   @Input()
-  claimGroups: ClaimGroup[] = []; // Your data array
+  claimGroups: ClaimGroup[] = [];
+
+  @Input()
+  failed: ClaimGroup[] = [];
+
+  @Input()
+  successful: ClaimGroup[] = [];
 
   @Output()
   selected = new EventEmitter<ClaimGroup[]>();
@@ -71,5 +77,17 @@ export class ClaimGroupsTableComponent implements OnInit {
       startIndex,
       startIndex + this.pageSize
     );
+  }
+
+  hasFailed(claim: ClaimGroup) {
+    return !!this.failed.find(f => f.destination === claim.destination);
+  }
+
+  hasSucceeded(claim: ClaimGroup) {
+    return !!this.successful.find(f => f.destination === claim.destination);
+  }
+
+  clearSelection() {
+    this.selectedClaimGroups.length = 0;
   }
 }

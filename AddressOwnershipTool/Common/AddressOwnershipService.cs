@@ -15,12 +15,13 @@ using System.Reflection;
 using System.Text;
 using Stratis.Sidechains.Networks;
 using System;
+using AddressOwnershipTool.Commands.Update;
 
 namespace AddressOwnershipTool.Common;
 
 public class AddressOwnershipService : IAddressOwnershipService
 {
-    private const string distributedTransactionsFilename = "Distributed.csv";
+    private const string distributedTransactionsFilename = "distributed.csv";
     private const string ownershipFilename = "ownership.csv";
     private const decimal splitThreshold = 10_000m * 100_000_000m; // In stratoshi
     private const decimal splitCount = 10;
@@ -29,11 +30,12 @@ public class AddressOwnershipService : IAddressOwnershipService
     private readonly Network network;
     private readonly string ownershipFilePath;
     private readonly INodeApiClientFactory nodeApiClientFactory;
-    private List<DistributedOwnershipTransaction> distributedTransactions;
+    private readonly IEthRpcClientFactory ethRpcClientFactory;
+    private List<SwappedTx> distributedTransactions;
     private List<OwnershipTransaction> ownershipTransactions;
     private int straxApiPort;
 
-    public AddressOwnershipService(INodeApiClientFactory nodeApiClientFactory, bool testnet, bool useCirrus = false, bool loadFiles = true)
+    public AddressOwnershipService(INodeApiClientFactory nodeApiClientFactory, IEthRpcClientFactory ethRpcClientFactory, bool testnet, bool useCirrus = false, bool loadFiles = true)
     {
         this.network = testnet 
             ? (useCirrus ? new CirrusTest() : new StraxTest())
@@ -53,6 +55,7 @@ public class AddressOwnershipService : IAddressOwnershipService
         }
 
         this.nodeApiClientFactory = nodeApiClientFactory;
+        this.ethRpcClientFactory = ethRpcClientFactory;
     }
 
     private void LoadAlreadyDistributedTransactions()
@@ -64,7 +67,7 @@ public class AddressOwnershipService : IAddressOwnershipService
             using (var reader = new StreamReader(Path.Combine(this.ownershipFilePath, distributedTransactionsFilename)))
             using (var csv = new CsvReader(reader, new CsvConfiguration(CultureInfo.InvariantCulture) { HasHeaderRecord = false }))
             {
-                this.distributedTransactions = csv.GetRecords<DistributedOwnershipTransaction>().ToList();
+                this.distributedTransactions = csv.GetRecords<SwappedTx>().ToList();
             }
         }
         else
@@ -74,7 +77,7 @@ public class AddressOwnershipService : IAddressOwnershipService
                 file.Close();
             }
 
-            this.distributedTransactions = new List<DistributedOwnershipTransaction>();
+            this.distributedTransactions = new List<SwappedTx>();
         }
     }
 
@@ -166,6 +169,8 @@ public class AddressOwnershipService : IAddressOwnershipService
 
                     decimal balance = straxApiClient.GetAddressBalance(address);
 
+                    // now check that destination doesn't already have this amount
+
                     if (balance == 0)
                     {
                         Console.WriteLine($"Address {address} has a zero balance, skipping it.");
@@ -189,7 +194,8 @@ public class AddressOwnershipService : IAddressOwnershipService
                         SenderAmount = balance,
                         StraxAddress = destination,
                         // We set this to the source address on the Strax chain, to ensure only one record exists per unique address.
-                        SignedAddress = address
+                        SignedAddress = address,
+                        Type = "Manual"
                     });
                 }
                 catch
@@ -356,7 +362,7 @@ public class AddressOwnershipService : IAddressOwnershipService
 
         foreach (OwnershipTransaction ownershipTransaction in this.ownershipTransactions)
         {
-            if (this.distributedTransactions.Any(d => d.SourceAddress == ownershipTransaction.SignedAddress))
+            if (this.distributedTransactions.Any(d => d.Destination == ownershipTransaction.SignedAddress))
             {
                 Console.WriteLine($"Already distributed: {ownershipTransaction.StraxAddress} -> {Money.Satoshis(ownershipTransaction.SenderAmount).ToUnit(MoneyUnit.BTC)} STRAT");
 
@@ -375,21 +381,21 @@ public class AddressOwnershipService : IAddressOwnershipService
 
             try
             {
-                var distributedSwapTransaction = new DistributedOwnershipTransaction(ownershipTransaction);
+                var distributedSwapTransaction = new SwappedTx();
 
                 List<RecipientModel> recipients = GetRecipients(ownershipTransaction.StraxAddress, ownershipTransaction.SenderAmount);
 
                 WalletBuildTransactionModel builtTransaction = straxApiClient.BuildTransaction(walletName, walletPassword, accountName, recipients);
 
-                distributedSwapTransaction.TransactionBuilt = true;
-
                 straxApiClient.SendTransaction(builtTransaction.Hex);
 
-                distributedSwapTransaction.TransactionSent = true;
-                distributedSwapTransaction.TransactionSentHash = builtTransaction.TransactionId.ToString();
+                distributedSwapTransaction.Destination = ownershipTransaction.StraxAddress;
+                distributedSwapTransaction.Amount = ownershipTransaction.SenderAmount;
+                distributedSwapTransaction.TxHash = builtTransaction.TransactionId.ToString();
+                distributedSwapTransaction.Type = "Manual";
 
                 if (send)
-                    Console.WriteLine($"Swap transaction built and sent to {distributedSwapTransaction.StraxAddress}:{Money.Satoshis(distributedSwapTransaction.SenderAmount).ToUnit(MoneyUnit.BTC)}");
+                    Console.WriteLine($"Swap transaction built and sent to {distributedSwapTransaction.Destination}:{Money.Satoshis(distributedSwapTransaction.Amount).ToUnit(MoneyUnit.BTC)}");
 
                 // Append to the file.
                 using (FileStream stream = File.Open(Path.Combine(this.ownershipFilePath, distributedTransactionsFilename), FileMode.Append))

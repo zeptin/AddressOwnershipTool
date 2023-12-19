@@ -31,7 +31,9 @@ IHostBuilder CreateHostBuilder(string[] strings)
             services.AddTransient<INodeApiClient>(provider => new NodeApiClient(ExplorerBaseUrl));
             services.AddTransient<INodeApiClientFactory, NodeApiClientFactory>();
             services.AddTransient<IAddressOwnershipServiceFactory, AddressOwnershipServiceFactory>();
+            services.AddTransient<ISwapExtractionServiceFactory, SwapExtractionServiceFactory>();
             services.AddScoped<IBlockExplorerClient, BlockExplorerClient>();
+            services.AddScoped<IEthRpcClientFactory, EthRpcClientFactory>();
 
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(App).Assembly));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
