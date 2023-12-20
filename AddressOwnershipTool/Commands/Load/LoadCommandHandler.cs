@@ -10,6 +10,13 @@ namespace AddressOwnershipTool.Commands.Load;
 
 public class LoadCommandHandler : ICommandHandler<LoadCommand, Result<List<ClaimGroup>>>
 {
+    private readonly IEthRpcClientFactory _ethRpcClientFactory;
+
+    public LoadCommandHandler(IEthRpcClientFactory ethRpcClientFactory)
+    {
+        _ethRpcClientFactory = ethRpcClientFactory;
+    }
+
     public async Task<Result<List<ClaimGroup>>> Handle(LoadCommand request, CancellationToken cancellationToken)
     {
         var claimGroups = new List<ClaimGroup>();
@@ -75,15 +82,70 @@ public class LoadCommandHandler : ICommandHandler<LoadCommand, Result<List<Claim
         var grouped = claims
             .GroupBy(c => c.Destination)
             .Select(g => new ClaimGroup
-                {
-                    Destination = g.Key,
-                    Claims = g.Select(c => c).ToList(),
-                    Type = g.First().Type,
-                })
+            {
+                Destination = g.Key,
+                Claims = g.Select(c => c).ToList(),
+                Type = g.First().Type,
+            })
             .Where(c => !alreadySwapped.Any(s => s.Destination == c.Destination))
             .ToList();
 
+        // check transaction that have already been transferred
+        await this.CheckIfAlreadyIssued(request, grouped);
+
         return Result.Ok(grouped);
+    }
+
+    private async Task CheckIfAlreadyIssued(LoadCommand request, List<ClaimGroup> grouped)
+    {
+        var ethClient = _ethRpcClientFactory.Create(false);
+        var flaggedTransfers = new List<QuarantinedTransaction>();
+        foreach (var claim in grouped)
+        {
+            var balance = await ethClient.GetBalance(claim.Destination);
+            if (balance != claim.TotalAmountToTransfer) continue;
+
+            // we found balance which matches amount to transfer, this means it is very likely to
+            // be a double claim, we need to quarantine it
+            flaggedTransfers.Add(new QuarantinedTransaction { Destination = claim.Destination, Amount = claim.TotalAmountToTransfer });
+        }
+
+        if (flaggedTransfers.Any())
+        {
+            var path = Path.Combine(request.Path, "quarantine");
+
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
+            var filePath = Path.Combine(path, "quarantined.csv");
+            var fileExists = File.Exists(filePath);
+
+            using (FileStream stream = File.Open(Path.Combine(path, "quarantined.csv"), FileMode.Append))
+            using (var writer = new StreamWriter(stream))
+            using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+            {
+                if (!fileExists)
+                {
+                    csv.WriteHeader<QuarantinedTransaction>();
+                }
+
+                csv.NextRecord();
+
+                foreach (var tx in flaggedTransfers)
+                {
+                    csv.WriteRecord(tx);
+                    csv.NextRecord();
+
+                    var existingClaim = grouped.FirstOrDefault(c => c.Destination == tx.Destination);
+                    if (existingClaim != null)
+                    {
+                        grouped.Remove(existingClaim);
+                    }
+                }
+            }
+        }
     }
 
     private List<SwappedTx> LoadSwappedTxs(string path)

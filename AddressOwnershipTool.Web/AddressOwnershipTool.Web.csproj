@@ -22,6 +22,8 @@
         <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.0.3" />
         <PackageReference Include="Nethereum.RPC" Version="4.18.0" />
         <PackageReference Include="Nethereum.Signer" Version="4.18.0" />
+        <PackageReference Include="Nethereum.Signer.EIP712" Version="4.18.0" />
+        <PackageReference Include="Nethereum.Signer.Ledger" Version="4.18.0" />
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.3" />
     </ItemGroup>
 

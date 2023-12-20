@@ -25,12 +25,19 @@ public class GethRpcClient : IEthRpcCleint
 
     public async Task<decimal> GetBalance(string destination)
     {
-        var client = new RpcClient(new Uri(_baseUrl));
-        var request = new Nethereum.RPC.Eth.EthGetBalance(client);
-        var result = await request.SendRequestAsync(destination);
+        try
+        {
+            var client = new RpcClient(new Uri(_baseUrl));
+            var request = new Nethereum.RPC.Eth.EthGetBalance(client);
+            var result = await request.SendRequestAsync(destination);
 
-        var etherAmount = Web3.Convert.FromWei(result.Value);
+            var etherAmount = Nethereum.Util.UnitConversion.Convert.FromWei(result.Value);
 
-        return etherAmount;
+            return etherAmount;
+        }
+        catch
+        {
+            return 0;
+        }
     }
 }
