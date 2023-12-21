@@ -107,7 +107,12 @@ public class LoadCommandHandler : ICommandHandler<LoadCommand, Result<List<Claim
 
             // we found balance which matches amount to transfer, this means it is very likely to
             // be a double claim, we need to quarantine it
-            flaggedTransfers.Add(new QuarantinedTransaction { Destination = claim.Destination, Amount = claim.TotalAmountToTransfer });
+            flaggedTransfers.Add(new QuarantinedTransaction
+            {
+                Destination = claim.Destination,
+                Amount = claim.TotalAmountToTransfer,
+                Type = claim.Type
+            });
         }
 
         if (flaggedTransfers.Any())
