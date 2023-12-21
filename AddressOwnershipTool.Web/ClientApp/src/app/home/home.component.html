@@ -1,4 +1,8 @@
 <div class="container mt-4" *ngIf="claimGroups.length === 0">
+  <div class="modal-backdrop show" *ngIf="busy"></div>
+  <div class="modal show d-flex justify-content-center align-items-center" *ngIf="busy">
+    <div class="spinner-border text-primary" role="status"></div>
+  </div>
   <form [formGroup]="directoryForm" (ngSubmit)="onSubmit()" *ngIf="authService.isLoggedIn$ | async; else notLoggedInTemplate">
     <div class="mb-3">
       <label for="directoryPath" class="form-label">Directory Path</label>

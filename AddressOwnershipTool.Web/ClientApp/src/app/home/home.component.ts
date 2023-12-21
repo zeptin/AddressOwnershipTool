@@ -47,12 +47,14 @@ export class HomeComponent implements OnInit {
 
   async onSubmit() {
     if (this.directoryForm.valid) {
+      this.busy = true;
       const result = await this.distributionService.load(this.directoryForm.value.directoryPath);
       if (!!result.message) {
         alert(result.message);
       } else {
         this.claimGroups = result.result;
       }
+      this.busy = false;
     }
   }
 
