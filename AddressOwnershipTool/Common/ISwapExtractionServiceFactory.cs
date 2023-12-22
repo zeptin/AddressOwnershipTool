@@ -2,6 +2,6 @@
 {
     public interface ISwapExtractionServiceFactory
     {
-        ISwapExtractionService CreateSwapExtractionServiceFactory(bool testnet, bool useCirrus = false);
+        ISwapExtractionService CreateSwapExtractionServiceFactory(bool testnet, bool useCirrus = false, string outputPath = null);
     }
 }

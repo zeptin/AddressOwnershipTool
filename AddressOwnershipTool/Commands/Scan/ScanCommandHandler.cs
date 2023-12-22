@@ -13,9 +13,9 @@ public class ScanCommandHandler : ICommandHandler<ScanCommand, Result>
 
     public async Task<Result> Handle(ScanCommand request, CancellationToken cancellationToken)
     {
-        var service = _swapExtractionServiceFactory.CreateSwapExtractionServiceFactory(request.Testnet, request.UseCirrus);
+        var service = _swapExtractionServiceFactory.CreateSwapExtractionServiceFactory(request.Testnet, request.UseCirrus, request.OutputFolder);
 
-        await service.RunAsync(request.StartBlock);
+        await service.RunAsync(request.StartBlock, request.EndBlock);
 
         return Result.Ok();
     }

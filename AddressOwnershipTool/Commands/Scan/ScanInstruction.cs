@@ -11,13 +11,21 @@ public class ScanInstruction : BaseInstruction
     [Option('s', "start", Required = false, HelpText = "[Required] Start block to scan.")]
     public int StartBlock { get; set; }
 
+    [Option('e', "end", Required = false, HelpText = "[Optional] End block to scan.", Default = 2100000)]
+    public int EndBlock { get; set; }
+
+    [Option('o', "outputFolder", Required = false, HelpText = "[Optional] Path for the folder where generated CSV will go")]
+    public string OutputFolder { get; set; }
+
     public ScanCommand ToCommand()
     {
         return new ScanCommand
         {
             Testnet = Testnet,
             UseCirrus = UseCirrus,
-            StartBlock = StartBlock
+            StartBlock = StartBlock,
+            EndBlock = EndBlock,
+            OutputFolder = OutputFolder
         };
     }
 }

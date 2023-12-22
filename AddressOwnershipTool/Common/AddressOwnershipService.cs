@@ -31,11 +31,12 @@ public class AddressOwnershipService : IAddressOwnershipService
     private readonly string ownershipFilePath;
     private readonly INodeApiClientFactory nodeApiClientFactory;
     private readonly IEthRpcClientFactory ethRpcClientFactory;
+    private readonly string outputPath;
     private List<SwappedTx> distributedTransactions;
     private List<OwnershipTransaction> ownershipTransactions;
     private int straxApiPort;
 
-    public AddressOwnershipService(INodeApiClientFactory nodeApiClientFactory, IEthRpcClientFactory ethRpcClientFactory, bool testnet, bool useCirrus = false, bool loadFiles = true)
+    public AddressOwnershipService(INodeApiClientFactory nodeApiClientFactory, IEthRpcClientFactory ethRpcClientFactory, bool testnet, bool useCirrus = false, bool loadFiles = true, string outputPath = null)
     {
         this.network = testnet 
             ? (useCirrus ? new CirrusTest() : new StraxTest())
@@ -45,7 +46,9 @@ public class AddressOwnershipService : IAddressOwnershipService
             ? (useCirrus ? 38223 : 27103)
             : (useCirrus ? 37223 : 17103);
 
-        this.ownershipFilePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        this.ownershipFilePath = string.IsNullOrEmpty(outputPath)
+                ? Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
+                : outputPath;
 
         // Only needed for -validate and -distribute
         if (loadFiles)
@@ -56,6 +59,7 @@ public class AddressOwnershipService : IAddressOwnershipService
 
         this.nodeApiClientFactory = nodeApiClientFactory;
         this.ethRpcClientFactory = ethRpcClientFactory;
+        this.outputPath = outputPath;
     }
 
     private void LoadAlreadyDistributedTransactions()
@@ -326,7 +330,9 @@ public class AddressOwnershipService : IAddressOwnershipService
 
         Console.WriteLine(export);
 
-        using (StreamWriter sw = File.AppendText(destinationAddress + ".csv"))
+        var destination = string.IsNullOrEmpty(this.outputPath) ? $"{destinationAddress}.csv" : Path.Combine(this.outputPath, $"{destinationAddress}.csv");
+
+        using (StreamWriter sw = File.AppendText(destination))
         {
             sw.WriteLine(export);
         }

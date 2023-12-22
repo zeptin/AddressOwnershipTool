@@ -72,7 +72,7 @@ public class ClaimCommandHandler : ICommandHandler<ClaimCommand, Result>
         }
         else
         {
-            var addressOwnershipService = _addressOwnershipServiceFactory.CreateAddressOwnershipService(request.Testnet, request.UseCirrus, false);
+            var addressOwnershipService = _addressOwnershipServiceFactory.CreateAddressOwnershipService(request.Testnet, request.UseCirrus, false, outputPath: request.OutputFolder);
             addressOwnershipService.SbfnExport(request.WalletName, request.WalletPassword, request.Destination, request.Deep, request.DataFolder);
         }
 

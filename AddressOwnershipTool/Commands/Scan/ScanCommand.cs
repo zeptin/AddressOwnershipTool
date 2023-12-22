@@ -9,4 +9,8 @@ public class ScanCommand : ICommand<Result>
     public bool Testnet { get; set; }
 
     public int StartBlock { get; set; }
+
+    public int EndBlock { get; set; }
+
+    public string OutputFolder { get; set; }
 }

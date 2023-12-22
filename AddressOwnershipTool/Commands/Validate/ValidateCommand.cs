@@ -9,4 +9,6 @@ public class ValidateCommand : ICommand<Result>
     public bool Testnet { get; set; }
 
     public bool UseCirrus { get; set; }
+
+    public string OutputFolder { get; set; }
 }

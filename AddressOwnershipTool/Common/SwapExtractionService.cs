@@ -15,14 +15,15 @@ public sealed class SwapExtractionService : ExtractionBase, ISwapExtractionServi
 {
     private List<SwapTransaction> swapTransactions;
     private readonly INodeApiClientFactory nodeApiClientFactory;
+    private readonly string outputPath;
     private readonly Network network;
     private readonly int straxApiPort;
 
-    public SwapExtractionService(INodeApiClientFactory nodeApiClientFactory, bool testnet, bool useCirrus)
+    public SwapExtractionService(INodeApiClientFactory nodeApiClientFactory, bool testnet, bool useCirrus, string outputPath = null)
     {
         this.swapTransactions = new List<SwapTransaction>();
         this.nodeApiClientFactory = nodeApiClientFactory;
-
+        this.outputPath = string.IsNullOrEmpty(outputPath) ? "swaps.csv" : Path.Combine(outputPath, "swaps.csv");
         this.network = testnet
             ? (useCirrus ? new CirrusTest() : new StraxTest())
             : (useCirrus ? new CirrusMain() : new StraxMain());
@@ -32,11 +33,11 @@ public sealed class SwapExtractionService : ExtractionBase, ISwapExtractionServi
             : (useCirrus ? 37223 : 17103);
     }
 
-    public async Task RunAsync(int startBlock)
+    public async Task RunAsync(int startBlock, int endBlock)
     {
         await this.LoadSwapTransactionFileAsync();
 
-        await ScanForSwapTransactionsAsync(startBlock);
+        await ScanForSwapTransactionsAsync(startBlock, endBlock);
     }
 
     private async Task LoadSwapTransactionFileAsync()
@@ -44,10 +45,10 @@ public sealed class SwapExtractionService : ExtractionBase, ISwapExtractionServi
         Console.WriteLine($"Loading swap transaction file...");
 
         // First check if the swap file has been created.
-        if (File.Exists("swaps.csv"))
+        if (File.Exists(this.outputPath))
         {
             // If so populate the list from disk.
-            using (var reader = new StreamReader("swaps.csv"))
+            using (var reader = new StreamReader(this.outputPath))
             using (var csv = new CsvReader(reader, new CsvConfiguration(CultureInfo.InvariantCulture)))
             {
                 this.swapTransactions = await csv.GetRecordsAsync<SwapTransaction>().ToListAsync();
@@ -65,11 +66,11 @@ public sealed class SwapExtractionService : ExtractionBase, ISwapExtractionServi
         }
     }
 
-    private async Task ScanForSwapTransactionsAsync(int startBlock)
+    private async Task ScanForSwapTransactionsAsync(int startBlock, int endBlock)
     {
         Console.WriteLine($"Scanning for swap transactions...");
 
-        for (int height = startBlock; height < EndHeight; height++)
+        for (int height = startBlock; height < endBlock; height++)
         {
             var client = nodeApiClientFactory.CreateNodeApiClient($"http://localhost:{this.straxApiPort}/api");
             BlockTransactionDetailsModel block = await client.RetrieveBlockAtHeightAsync(height);
@@ -84,7 +85,7 @@ public sealed class SwapExtractionService : ExtractionBase, ISwapExtractionServi
         Console.WriteLine($"{this.swapTransactions.Count} swap transactions to process.");
         Console.WriteLine($"{Money.Satoshis(this.swapTransactions.Sum(s => s.SenderAmount)).ToUnit(MoneyUnit.BTC)} STRAX swapped.");
 
-        using (var writer = new StreamWriter("swaps.csv"))
+        using (var writer = new StreamWriter(this.outputPath))
         using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
         {
             csv.WriteRecords(this.swapTransactions);

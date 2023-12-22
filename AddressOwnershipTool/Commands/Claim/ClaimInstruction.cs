@@ -23,6 +23,9 @@ public class ClaimInstruction : BaseInstruction
     [Option('r', "datafolder", Required = false, HelpText = "[Optional] Root folder for your node")]
     public string DataFolder { get; set; }
 
+    [Option('o', "outputFolder", Required = false, HelpText = "[Optional] Path for the folder where generated CSV will go")]
+    public string OutputFolder { get; set; }
+
     public ClaimCommand ToCommand()
     {
         return new ClaimCommand
@@ -33,7 +36,8 @@ public class ClaimInstruction : BaseInstruction
             Testnet = Testnet,
             UseCirrus = UseCirrus,
             Destination = Destination,
-            DataFolder = DataFolder
+            DataFolder = DataFolder,
+            OutputFolder = OutputFolder
         };
     }
 }

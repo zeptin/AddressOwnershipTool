@@ -19,8 +19,8 @@ public sealed class SwapExtractionServiceFactory : ISwapExtractionServiceFactory
         this.nodeApiClientFactory = nodeApiClientFactory;
     }
 
-    public ISwapExtractionService CreateSwapExtractionServiceFactory(bool testnet, bool useCirrus = false)
+    public ISwapExtractionService CreateSwapExtractionServiceFactory(bool testnet, bool useCirrus = false, string outputPath = null)
     {
-        return new SwapExtractionService(nodeApiClientFactory, testnet, useCirrus);
+        return new SwapExtractionService(nodeApiClientFactory, testnet, useCirrus, outputPath);
     }
 }

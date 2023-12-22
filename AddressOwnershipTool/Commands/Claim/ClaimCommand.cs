@@ -23,4 +23,6 @@ public class ClaimCommand : ICommand<Result>
     public bool Testnet { get; set; }
 
     public string DataFolder { get; set; }
+
+    public string OutputFolder { get; set; }
 }

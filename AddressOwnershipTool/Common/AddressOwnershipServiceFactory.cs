@@ -11,8 +11,8 @@ public class AddressOwnershipServiceFactory : IAddressOwnershipServiceFactory
         _ethRpcClientFactory = ethRpcClientFactory;
     }
 
-    public IAddressOwnershipService CreateAddressOwnershipService(bool testnet, bool useCirrus = false, bool loadFiles = true)
+    public IAddressOwnershipService CreateAddressOwnershipService(bool testnet, bool useCirrus = false, bool loadFiles = true, string outputPath = null)
     {
-        return new AddressOwnershipService(_nodeApiClientFactory, _ethRpcClientFactory, testnet, useCirrus, loadFiles);
+        return new AddressOwnershipService(_nodeApiClientFactory, _ethRpcClientFactory, testnet, useCirrus, loadFiles, outputPath);
     }
 }
