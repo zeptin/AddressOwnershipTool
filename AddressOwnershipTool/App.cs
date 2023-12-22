@@ -24,14 +24,9 @@ namespace AddressOwnershipTool
 
             Parser
                 .Default
-                .ParseArguments<ClaimInstruction, DistributeInstruction, ValidateInstruction, ScanInstruction>(args)
+                .ParseArguments<ClaimInstruction, ValidateInstruction, ScanInstruction>(args)
                 .MapResult(
                     (ClaimInstruction instruction) =>
-                    {
-                        command = instruction.ToCommand();
-                        return 0;
-                    },
-                    (DistributeInstruction instruction) =>
                     {
                         command = instruction.ToCommand();
                         return 0;
