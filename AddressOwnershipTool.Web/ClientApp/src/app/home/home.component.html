@@ -19,7 +19,7 @@
         <small>Directory path is required.</small>
       </div>
       <div *ngIf="directoryForm.get('directoryPath')?.errors?.directoryNotFound" class="invalid-feedback">
-        <small>Directory not found. {{directoryForm.get('directoryPath')?.errors?.directoryNotFound}}</small>
+        <small>Directory not found.</small>
       </div>
     </div>
     <button type="submit" class="btn btn-primary" [disabled]="!directoryForm.get('directoryPath')?.valid">Submit</button>
