@@ -32,7 +32,7 @@ export class HomeComponent implements OnInit {
     private directoryValidationService: DirectoryValidationService,
     private distributionService: DistributionService) {
     this.directoryForm = new FormGroup({
-      directoryPath: new FormControl('C:\\Temp\\cirrus', {
+      directoryPath: new FormControl('', {
         validators: [Validators.required],
         asyncValidators: [directoryExistsValidator(this.directoryValidationService)],
         updateOn: 'blur'
