@@ -45,7 +45,13 @@ You can also optionally supply destination path `--outputFolder=yourpath` where 
 
 ### Validate
 
-This step is to be used to validate all claim files and generate a token distribution file
+This step is to be used to validate all claim files and generate a token distribution file.
+
+Validation uses local Strax/Cirrus node to perform balance check. Make sure you have local node running with address indexer and fully synced. For example to run testnet Strax node, use:
+
+```
+.\Stratis.StraxD.exe -testnet -addressindex
+```
 
 A typical run would look like this:
 
