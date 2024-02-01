@@ -8,7 +8,7 @@ public class ClaimGroup
 
     public int NumberOfClaimedAddresses => this.Claims.Count();
 
-    public decimal TotalAmountToTransfer => this.OriginalTotalBalance * 0.0001M;
+    public decimal TotalAmountToTransfer => this.OriginalTotalBalance * 10M;
 
     public decimal OriginalTotalBalance => this.Claims.Sum(c => c.Balance);
 
