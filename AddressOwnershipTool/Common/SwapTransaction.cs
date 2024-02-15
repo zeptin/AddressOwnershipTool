@@ -8,7 +8,9 @@ public sealed class SwapTransaction
 
     public string DestinationAddress { get; set; }
 
-    public decimal SenderAmount { get; set; }
+    public string SenderAmount { get; set; }
+
+    public decimal SenderAmountValue => string.IsNullOrEmpty(this.SenderAmount) ? 0 : (decimal.TryParse(this.SenderAmount, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var amount) ? amount : 0);
 
     public string TransactionHash { get; set; }
 

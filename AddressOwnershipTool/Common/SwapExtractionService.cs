@@ -83,7 +83,7 @@ public sealed class SwapExtractionService : ExtractionBase, ISwapExtractionServi
         }
 
         Console.WriteLine($"{this.swapTransactions.Count} swap transactions to process.");
-        Console.WriteLine($"{Money.Satoshis(this.swapTransactions.Sum(s => s.SenderAmount)).ToUnit(MoneyUnit.BTC)} STRAX swapped.");
+        Console.WriteLine($"{Money.Satoshis(this.swapTransactions.Sum(s => s.SenderAmountValue)).ToUnit(MoneyUnit.BTC)} STRAX swapped.");
 
         using (var writer = new StreamWriter(this.outputPath))
         using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
@@ -128,7 +128,7 @@ public sealed class SwapExtractionService : ExtractionBase, ISwapExtractionServi
                         {
                             BlockHeight = blockHeight,
                             DestinationAddress = destinationAddress.ToString(),
-                            SenderAmount = (long)Money.Coins(output.Value),
+                            SenderAmount = ((long)Money.Coins(output.Value)).ToString(),
                             TransactionHash = transaction.Hash,
                             Network = this.network.Name.Contains("Strax", StringComparison.OrdinalIgnoreCase) ? "Strax" : "Cirrus"
                         };

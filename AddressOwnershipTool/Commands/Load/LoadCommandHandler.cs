@@ -40,14 +40,14 @@ public class LoadCommandHandler : ICommandHandler<LoadCommand, Result<List<Claim
             {
                 var txs = csv.GetRecords<SwapTransaction>().ToList();
 
-                txs = txs.Where(t => t.SenderAmount > 0).ToList();
+                txs = txs.Where(t => t.SenderAmountValue > 0).ToList();
 
                 if (!txs.Any())
                     continue;
 
                 claims.AddRange(txs.Select(t => new Claim
                 {
-                    Balance = Money.Satoshis(t.SenderAmount).ToUnit(MoneyUnit.BTC),
+                    Balance = Money.Satoshis(t.SenderAmountValue).ToUnit(MoneyUnit.BTC),
                     Destination = t.DestinationAddress,
                     OriginNetwork = t.Network,
                     Type = "Burnt"

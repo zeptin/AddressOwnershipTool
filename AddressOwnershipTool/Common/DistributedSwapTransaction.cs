@@ -16,7 +16,7 @@ public sealed class DistributedSwapTransaction
     {
         this.BlockHeight = swapTransaction.BlockHeight;
         this.StraxAddress = swapTransaction.DestinationAddress;
-        this.SenderAmount = swapTransaction.SenderAmount;
+        this.SenderAmount = swapTransaction.SenderAmountValue;
         this.TransactionHash = swapTransaction.TransactionHash;
     }
 }
