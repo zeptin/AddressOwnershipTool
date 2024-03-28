@@ -26,6 +26,9 @@ public class ClaimInstruction : BaseInstruction
     [Option('o', "outputFolder", Required = false, HelpText = "[Optional] Path for the folder where generated CSV will go")]
     public string OutputFolder { get; set; }
 
+    [Option('p', "privkeyfile", Required = false, HelpText = "Please provide private key file, if used all other settings not required.")]
+    public string PrivateKeyFile { get; set; }
+
     public ClaimCommand ToCommand()
     {
         return new ClaimCommand
@@ -34,6 +37,7 @@ public class ClaimInstruction : BaseInstruction
             WalletPassword = WalletPassword,
             WalletName = WalletName,
             Testnet = Testnet,
+            PrivateKeyFile = PrivateKeyFile,
             UseCirrus = UseCirrus,
             Destination = Destination,
             DataFolder = DataFolder,
