@@ -229,10 +229,6 @@ public class AddressOwnershipService : IAddressOwnershipService
             if (line.Trim().StartsWith("#"))
                 continue;
 
-            // If it isn't at least long enough to contain the WIF then ignore the line
-            if (line.Trim().Length < 53)
-                continue;
-
             try
             {
                 string[] data = line.Trim().Split(" ");
