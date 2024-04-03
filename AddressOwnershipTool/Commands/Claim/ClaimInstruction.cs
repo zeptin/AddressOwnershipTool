@@ -29,6 +29,9 @@ public class ClaimInstruction : BaseInstruction
     [Option('p', "privkeyfile", Required = false, HelpText = "Please provide private key file, if used all other settings not required.")]
     public string PrivateKeyFile { get; set; }
 
+    [Option('z', "deep", Required = false, HelpText = "Perform deep scan. Generally only needed if cold staking addresses need to be included")]
+    public bool Deep { get; set; }
+
     public ClaimCommand ToCommand()
     {
         return new ClaimCommand
@@ -38,6 +41,7 @@ public class ClaimInstruction : BaseInstruction
             WalletName = WalletName,
             Testnet = Testnet,
             PrivateKeyFile = PrivateKeyFile,
+            Deep = Deep,
             UseCirrus = UseCirrus,
             Destination = Destination,
             DataFolder = DataFolder,
