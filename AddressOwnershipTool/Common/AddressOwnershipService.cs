@@ -300,7 +300,7 @@ public class AddressOwnershipService : IAddressOwnershipService
 
     public void HdAddressExport(Wallet wallet, string walletPassword, string destinationAddress, bool deepExport = false)
     {
-        foreach (HdAddress address in wallet.GetAllAddresses())
+        foreach (HdAddress address in wallet.GetAllAddresses(Wallet.AllAccounts))
         {
             if (address.Transactions.Count == 0 && !deepExport)
                 continue;
