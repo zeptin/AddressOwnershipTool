@@ -4,6 +4,8 @@ public class ClaimGroup
 {
     public string Destination { get; set; }
 
+    public string Origin { get; set; }
+
     public string Type { get; set; }
 
     public int NumberOfClaimedAddresses => this.Claims.Count();
@@ -22,6 +24,8 @@ public class Claim
     public decimal Balance { get; set; }
 
     public string OriginNetwork { get; set; }
+
+    public string Origin { get; set; }
 
     public string Type { get; set; }
 }

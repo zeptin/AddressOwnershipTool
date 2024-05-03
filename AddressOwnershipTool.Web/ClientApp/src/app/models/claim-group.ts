@@ -1,5 +1,6 @@
 export interface ClaimGroup {
   destination: string;
+  origin: string;
   numberOfClaimedAddresses: number;
   totalAmountToTransfer: number;
   originalTotalBalance: number;
@@ -14,6 +15,7 @@ export interface ClaimGroupResponse {
 
 export interface Claim {
   destination: string;
+  origin: string;
   balance: number;
   originNetwork: string;
   type: string;
@@ -21,6 +23,7 @@ export interface Claim {
 
 export interface SwappedTx {
   destination: string;
+  origin: string;
   amount: number;
   txHash: string;
   type: string;
@@ -28,6 +31,7 @@ export interface SwappedTx {
 
 export interface SwapRequest {
   destination: string;
+  origin: string;
   amount: number;
   txHash: string;
   path: string;

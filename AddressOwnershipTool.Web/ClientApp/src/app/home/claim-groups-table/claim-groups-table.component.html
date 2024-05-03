@@ -1,32 +1,32 @@
 <table class="table table-striped">
   <thead>
-    <tr>
-      <th>
-        <input type="checkbox" (change)="selectAll($event)" [checked]="isAllSelected()" />
-      </th>
-      <th>Destination</th>
-      <th>No of Claims</th>
-      <th>Amount to Transfer</th>
-      <th>Original Amount</th>
-      <th>Type</th>
-    </tr>
+      <tr>
+          <th>
+              <input type="checkbox" (change)="selectAll($event)" [checked]="isAllSelected()" />
+          </th>
+          <th>Destination</th>
+          <th>No of Claims</th>
+          <th>Amount to Transfer</th>
+          <th>Original Amount</th>
+          <th>Origin</th>
+          <th>Type</th>
+      </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let claimGroup of paginatedClaimGroups">
-      <td>
-        <input
-          [disabled]="hasSucceeded(claimGroup)"
-          type="checkbox"
-          (change)="selectClaimGroup(claimGroup, $event)"
-          [checked]="isSelected(claimGroup)"
-        />
-      </td>
-      <td [class.text-danger]="hasFailed(claimGroup)" [class.text-success]="hasSucceeded(claimGroup)">{{ claimGroup.destination }}</td>
-      <td>{{ claimGroup.numberOfClaimedAddresses }}</td>
-      <td>{{ claimGroup.totalAmountToTransfer }}</td>
-      <td>{{ claimGroup.originalTotalBalance }}</td>
-      <td>{{ claimGroup.type }}</td>
-    </tr>
+      <tr *ngFor="let claimGroup of paginatedClaimGroups">
+          <td>
+              <input [disabled]="hasSucceeded(claimGroup)"
+                     type="checkbox"
+                     (change)="selectClaimGroup(claimGroup, $event)"
+                     [checked]="isSelected(claimGroup)" />
+          </td>
+          <td [class.text-danger]="hasFailed(claimGroup)" [class.text-success]="hasSucceeded(claimGroup)">{{ claimGroup.destination }}</td>
+          <td>{{ claimGroup.numberOfClaimedAddresses }}</td>
+          <td>{{ claimGroup.totalAmountToTransfer }}</td>
+          <td>{{ claimGroup.originalTotalBalance }}</td>
+          <td>{{ claimGroup.origin }}</td>
+          <td>{{ claimGroup.type }}</td>
+      </tr>
   </tbody>
 </table>
 <ngb-pagination

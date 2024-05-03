@@ -15,6 +15,8 @@ public sealed class SwapTransaction
     public string TransactionHash { get; set; }
 
     public string Network { get; set; }
+
+    public string OriginAddress { get; set; }
 }
 
 public class Amount

@@ -30,6 +30,7 @@ public class UpdateCommandHandler : ICommandHandler<UpdateCommand, Result>
             {
                 csv.WriteHeader<SwappedTx>();
             }
+
             csv.NextRecord();
 
             csv.WriteRecord(new SwappedTx
@@ -37,7 +38,8 @@ public class UpdateCommandHandler : ICommandHandler<UpdateCommand, Result>
                 Amount = request.Amount,
                 TxHash = request.TxHash,
                 Destination = request.Destination,
-                Type = request.Type
+                Type = request.Type,
+                Origin = request.Origin
             });
         }
 
