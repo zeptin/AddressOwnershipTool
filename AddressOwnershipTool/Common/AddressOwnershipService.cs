@@ -160,6 +160,8 @@ public class AddressOwnershipService : IAddressOwnershipService
                     if (pubKey.Hash.ScriptPubKey.GetDestinationAddress(this.network).ToString() != address)
                     {
                         Console.WriteLine($"Invalid signature for address '{address}'!");
+
+                        continue;
                     }
 
                     if (!destination.IsValidAddress())
