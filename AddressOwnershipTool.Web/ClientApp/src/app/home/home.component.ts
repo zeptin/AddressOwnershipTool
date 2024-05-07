@@ -87,7 +87,8 @@ export class HomeComponent implements OnInit {
           destination: claim.destination,
           amount: claim.totalAmountToTransfer,
           path: this.directoryForm.value.directoryPath,
-          type: claim.type
+          type: claim.type,
+          origin: claim.origin
         });
       } catch {
         this.failed.push(claim);

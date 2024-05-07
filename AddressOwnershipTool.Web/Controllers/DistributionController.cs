@@ -41,6 +41,7 @@ public class DistributionController : Controller
             Path = request.Path,
             Amount = request.Amount,
             Destination = request.Destination,
+            Origin = request.Origin,
             TxHash = request.TxHash,
             Type = request.Type
         });

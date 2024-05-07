@@ -50,8 +50,8 @@ public class LoadCommandHandler : ICommandHandler<LoadCommand, Result<List<Claim
                     Balance = Money.Satoshis(t.SenderAmountValue).ToUnit(MoneyUnit.BTC),
                     Destination = t.DestinationAddress,
                     OriginNetwork = t.Network,
-                    Type = "Burnt"
-
+                    Type = "Burnt",
+                    Origin = t.OriginAddress
                 }).ToList());
             }
         }
@@ -73,21 +73,23 @@ public class LoadCommandHandler : ICommandHandler<LoadCommand, Result<List<Claim
                     Balance = Money.Satoshis(t.SenderAmount).ToUnit(MoneyUnit.BTC),
                     Destination = t.StraxAddress,
                     OriginNetwork = t.SignedAddress.StartsWith("C") ? "Cirrus" : "Strax",
-                    Type = "Manual"
+                    Type = "Manual",
+                    Origin = t.SignedAddress
 
                 }).ToList());
             }
         }
 
         var grouped = claims
-            .GroupBy(c => c.Destination)
+            .GroupBy(c => new { c.Destination, c.Origin })
             .Select(g => new ClaimGroup
             {
-                Destination = g.Key,
+                Destination = g.Key.Destination,
+                Origin = g.Key.Origin,
                 Claims = g.Select(c => c).ToList(),
                 Type = g.First().Type,
             })
-            .Where(c => !alreadySwapped.Any(s => s.Destination == c.Destination))
+            .Where(c => !alreadySwapped.Any(s => s.Destination == c.Destination && s.Origin == c.Origin))
             .ToList();
 
         // check transaction that have already been transferred
@@ -111,7 +113,8 @@ public class LoadCommandHandler : ICommandHandler<LoadCommand, Result<List<Claim
             {
                 Destination = claim.Destination,
                 Amount = claim.TotalAmountToTransfer,
-                Type = claim.Type
+                Type = claim.Type,
+                Origin = claim.Origin
             });
         }
 
