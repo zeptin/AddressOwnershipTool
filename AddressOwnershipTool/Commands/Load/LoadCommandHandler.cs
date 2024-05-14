@@ -95,6 +95,11 @@ public class LoadCommandHandler : ICommandHandler<LoadCommand, Result<List<Claim
         // check transaction that have already been transferred
         await this.CheckIfAlreadyIssued(request, grouped);
 
+        if (grouped.Count > request.Limit)
+        {
+            grouped = grouped.Take(request.Limit).ToList();
+        }
+
         return Result.Ok(grouped);
     }
 
