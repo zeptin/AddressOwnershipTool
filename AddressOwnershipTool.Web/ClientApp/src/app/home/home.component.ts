@@ -36,6 +36,10 @@ export class HomeComponent implements OnInit {
         validators: [Validators.required],
         asyncValidators: [directoryExistsValidator(this.directoryValidationService)],
         updateOn: 'blur'
+      }),
+      limit: new FormControl('', {
+        validators: [Validators.required],
+        updateOn: 'blur'
       })
     });
   }
@@ -48,7 +52,7 @@ export class HomeComponent implements OnInit {
   async onSubmit() {
     if (this.directoryForm.valid) {
       this.busy = true;
-      const result = await this.distributionService.load(this.directoryForm.value.directoryPath);
+      const result = await this.distributionService.load(this.directoryForm.value.directoryPath, this.directoryForm.value.limit);
       if (!!result.message) {
         alert(result.message);
       } else {

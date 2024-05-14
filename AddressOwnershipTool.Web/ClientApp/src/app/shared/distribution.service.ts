@@ -7,8 +7,8 @@ import { lastValueFrom } from 'rxjs';
 export class DistributionService {
   constructor(private http: HttpClient) {}
 
-  load(path: string) {
-    return lastValueFrom(this.http.post<ClaimGroupResponse>('/api/distribution/load', { path: path }));
+  load(path: string, limit: number) {
+    return lastValueFrom(this.http.post<ClaimGroupResponse>('/api/distribution/load', { path: path, limit: limit }));
   }
 
   update(data: SwapRequest) {

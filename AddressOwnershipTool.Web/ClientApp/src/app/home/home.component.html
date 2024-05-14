@@ -22,6 +22,16 @@
         <small>Directory not found.</small>
       </div>
     </div>
+    <div class="mb-3">
+      <label for="limit" class="form-label">Limit</label>
+      <input type="number"
+            id="limit"
+            class="form-control"
+            formControlName="limit">
+      <div class="form-text">
+        Specify maximum number of entries to display
+      </div>
+    </div>
     <button type="submit" class="btn btn-primary" [disabled]="!directoryForm.get('directoryPath')?.valid">Submit</button>
   </form>
   <ng-template #notLoggedInTemplate>
