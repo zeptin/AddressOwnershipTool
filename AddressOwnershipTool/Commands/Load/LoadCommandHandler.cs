@@ -47,7 +47,7 @@ public class LoadCommandHandler : ICommandHandler<LoadCommand, Result<List<Claim
 
                 claims.AddRange(txs.Select(t => new Claim
                 {
-                    Balance = Money.Satoshis(t.SenderAmountValue).ToUnit(MoneyUnit.BTC),
+                    Balance = Money.Coins(t.SenderAmountValue).ToUnit(MoneyUnit.BTC),
                     Destination = t.DestinationAddress,
                     OriginNetwork = t.Network,
                     Type = "Burnt",
@@ -70,7 +70,7 @@ public class LoadCommandHandler : ICommandHandler<LoadCommand, Result<List<Claim
 
                 claims.AddRange(txs.Select(t => new Claim
                 {
-                    Balance = Money.Satoshis(t.SenderAmount).ToUnit(MoneyUnit.BTC),
+                    Balance = Money.Coins(t.SenderAmount).ToUnit(MoneyUnit.BTC),
                     Destination = t.StraxAddress,
                     OriginNetwork = t.SignedAddress.StartsWith("C") ? "Cirrus" : "Strax",
                     Type = "Manual",
@@ -92,13 +92,13 @@ public class LoadCommandHandler : ICommandHandler<LoadCommand, Result<List<Claim
             .Where(c => !alreadySwapped.Any(s => s.Destination == c.Destination && s.Origin == c.Origin))
             .ToList();
 
-        // check transaction that have already been transferred
-        await this.CheckIfAlreadyIssued(request, grouped);
-
         if (grouped.Count > request.Limit)
         {
             grouped = grouped.Take(request.Limit).ToList();
         }
+
+        // check transaction that have already been transferred
+        await this.CheckIfAlreadyIssued(request, grouped);
 
         return Result.Ok(grouped);
     }

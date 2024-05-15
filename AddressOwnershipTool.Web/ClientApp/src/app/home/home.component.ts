@@ -52,6 +52,7 @@ export class HomeComponent implements OnInit {
   async onSubmit() {
     if (this.directoryForm.valid) {
       this.busy = true;
+      console.log(this.directoryForm.value);
       const result = await this.distributionService.load(this.directoryForm.value.directoryPath, this.directoryForm.value.limit);
       if (!!result.message) {
         alert(result.message);

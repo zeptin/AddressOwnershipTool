@@ -22,7 +22,7 @@ public class DistributionController : Controller
     [HttpPost("load")]
     public async Task<IActionResult> LoadFiles([FromBody] LoadRequest request)
     {
-        var response = await _mediator.Send(new LoadCommand { Path = request.Path });
+        var response = await _mediator.Send(new LoadCommand { Path = request.Path, Limit = request.Limit });
 
         if (response.Failure)
         {
